@@ -10,7 +10,7 @@ type pair struct {
 }
 
 func main() {
-	people := []string{"John", "Jane", "Jim", "Steve"}
+	people := []string{"John", "Jane", "Jim", "Bill"}
 	pairs := makePairs(people)
 
 	scheduleDay(pairs, people)
@@ -53,20 +53,29 @@ func makePeopleMap(people []string) map[string]bool {
 func scheduleDay(pairs []pair, people []string) []pair {
 	day := 1
 	peopleMap := makePeopleMap(people)
+	pairsScheduled := 0
 
-	for i, v := range pairs {
-		day = 1
+	for i := 0; i < 10; i++ {
 		peopleMap = makePeopleMap(people)
-		for ii, _ := range peopleMap {
-			if v.scheduled == false && (ii == v.name1 || ii == v.name2) {
-				pairs[i].day = day
-				pairs[i].scheduled = true
-				peopleMap[ii] = true
-				peopleMap[ii] = true
-				day++
+		for i, _ := range peopleMap {
+			for ii, vv := range pairs {
+				fmt.Println("Day", day)
+				if vv.scheduled == false && (i == vv.name1 || i == vv.name2) && (peopleMap[vv.name1] == false && peopleMap[vv.name2] == false) {
+					pairs[ii].day = day
+					pairs[ii].scheduled = true
+					peopleMap[vv.name1] = true
+					peopleMap[vv.name2] = true
+					pairsScheduled = pairsScheduled + 1
+				}
+				fmt.Printf("index:%5v\tv.name1:%8v\tv.name2:%8v\tv.day:%4v\tv.scheduled:%8v\n", i, pairs[ii].name1, pairs[ii].name2, pairs[ii].day, pairs[ii].scheduled)
+				fmt.Println(peopleMap)
 			}
-			fmt.Printf("index:%4v\tv.name1:%8v\tv.name2:%8v\tv.day:%4v\tv.scheduled:%8v\n", ii, pairs[i].name1, pairs[i].name2, pairs[i].day, pairs[i].scheduled)
+		}
+		day++
+		if pairsScheduled == len(pairs) {
+			break
 		}
 	}
+
 	return pairs
 }
